@@ -53,7 +53,7 @@ const Login = () => {
         if (data) {
           localStorage.setItem("token", data.token);
           localStorage.setItem("usuario", campoUser);
-          navigate("/home");
+          navigate("/dashboard/home");
         } else {
           setError(true);
         }

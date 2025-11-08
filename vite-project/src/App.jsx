@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 // Componentes
 import Login from "./components/Login";
 import Registro from "./components/Registro";
-import Home from "./components/Home";
+import Home from "./components/dashboard/Home";
 import "./App.css";
 
 const RutasPrivadas = () => {
