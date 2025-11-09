@@ -14,20 +14,26 @@ const styles = {
     padding: "2rem",
   },
   seccionPrincipal: {
-    backgroundColor: "#3761a6",
-    border: "3px solid #000",
-    borderRadius: "16px",
-    marginTop: "6rem",
-    padding: "1rem",
-    boxShadow: "5px 5px 0 #000",
-    display: "flex",
-    gap: "1rem",
-    height: "500px", // altura fija para controlar scroll
+    marginTop: "5rem",
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden', 
+    gap: '16px', 
   },
   columnaIzquierda: {
+    border: "3px solid #000",      
+    borderRadius: "12px",
+    backgroundColor: "#3761a6",
     flex: 3,
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    overflowX: 'auto', 
+    overflowY: 'hidden',
+    gap: '16px',
+    padding: '8px',
+    boxSizing: 'border-box',
+    maxHeight: '100%', 
   },
   columnaDerecha: {
     flex: 1,
@@ -38,13 +44,13 @@ const styles = {
   },
   columnaIzquierdaInferior: {
     backgroundColor: "#3761a6",       
-    border: "3px solid #000",      // Borde negro grueso
-    borderRadius: "12px",          // Bordes redondeados
-    padding: "1rem",               // Espacio interno entre los componentes
+    border: "3px solid #000",     
+    borderRadius: "12px",          
+    padding: "1rem",               
     marginTop: "1rem",             
     display: "flex",
     flexDirection: "column",
-    gap: "1rem",                   // Espacio entre los dos componentes internos
+    gap: "1rem",                   
   },
   columnaDerechaInferior: {
     flex: 3,         

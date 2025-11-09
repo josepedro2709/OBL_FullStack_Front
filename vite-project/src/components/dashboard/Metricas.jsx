@@ -1,4 +1,57 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
+
+import { useSelector } from "react-redux";
+
+//imposibilidad de aceder al user. no lo encuentra en el llamado por alguna razon
+const MetricasUso = () => {
+  const reviews = useSelector((state) => state.reviews.listaResenias);
+  const [usuario, setUsuario] = useState(null);
+  const totalReviews = reviews.length;
+  useEffect(() => {
+    const fetchUsuario = async () => {
+      const email = localStorage.getItem("usuario");
+      console.log("email", email);
+      if (!email) return;
+
+      try {
+        let token = localStorage.getItem("token");
+        const res = await fetch(`http://localhost:3000/v1/user/email/${email}`,{
+           headers: {
+        Authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+        });
+        const data = await res.json();
+        setUsuario(data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchUsuario();
+  }, []);
+  console.log("usuario", usuario);
+  const userPlan = usuario?.plan;
+  const maxDocsPlus = 10;
+
+  const porcentaje = Math.min((totalReviews / maxDocsPlus) * 100, 100);
+  return (
+    <div style={styles.container}>
+      {userPlan === 'plus' ? (
+        <>
+          <div style={styles.label}>Uso de documentos:</div>
+          <div style={styles.progressBarContainer}>
+            <div style={styles.progressBar(porcentaje)} />
+          </div>
+          <div style={styles.porcentajeText}>{porcentaje}%</div>
+        </>
+      ) : (
+        <div style={styles.label}>Total documentos: {totalReviews}</div>
+      )}
+    </div>
+  );
+
+};
 
 const styles = {
   container: {
@@ -33,19 +86,5 @@ const styles = {
     textAlign: "right",
     color: "#122ae0",
   },
-};
-
-const MetricasUso = () => {
-  const [porcentaje] = useState(65); // valor provisorio
-
-  return (
-    <div style={styles.container}>
-      <span style={styles.label}>Porcentaje de uso:</span>
-      <div style={styles.progressBarContainer}>
-        <div style={styles.progressBar(porcentaje)}></div>
-      </div>
-      <span style={styles.porcentajeText}>{porcentaje}%</span>
-    </div>
-  );
 };
 export default MetricasUso;

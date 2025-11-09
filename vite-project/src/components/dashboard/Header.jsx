@@ -1,4 +1,25 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom"; 
+import { resetReviews } from "../../store/slices/reviewsSlice";
+
+const Header = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const cerrarSesion = () => {
+   dispatch(resetReviews());
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario"); 
+    navigate("/"); 
+ };
+  return (
+    <header style={styles.header}>
+      <h2 style={styles.title}>Mi Dashboard</h2>
+      <button style={styles.button} onClick={cerrarSesion}>Cerrar sesión</button>
+    </header>
+  );
+};
+
 const styles = {
   header: {
     backgroundColor: "#c2cad9ff",
@@ -27,15 +48,6 @@ const styles = {
     cursor: "pointer",
     fontWeight: "600",
   },
-};
-
-const Header = () => {
-  return (
-    <header style={styles.header}>
-      <h2 style={styles.title}>Mi Dashboard</h2>
-      <button style={styles.button}>Cerrar sesión</button>
-    </header>
-  );
 };
 
 export default Header;

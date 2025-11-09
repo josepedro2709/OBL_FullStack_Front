@@ -15,9 +15,10 @@ export const reviewsSlice = createSlice({
     crearResenia: (state, action) => {
       state.listaResenias.push(action.payload);
     },
+    resetReviews: (state) => { state.listaResenias = [] },
   },
 });
 
-export const { cargarResenias, crearResenia } = reviewsSlice.actions;
+export const { cargarResenias, crearResenia, resetReviews } = reviewsSlice.actions;
 
 export default reviewsSlice.reducer;

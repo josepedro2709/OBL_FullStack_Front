@@ -12,7 +12,7 @@ const fotosDisponibles = [
   { id: 3, src: "https://res.cloudinary.com/ds1u1bvf3/image/upload/v1762630825/download_wuefo4.jpg", tipo: "Critica" },
   { id: 4, src: "https://res.cloudinary.com/ds1u1bvf3/image/upload/v1762630832/Rating_illustration_ginmij.jpg", tipo: "Comentario" },
 ];
-
+//problema con campo etiquetaId y comentario: aunque en el payload del network puedo ver que esta ok me marca como si llegase mal
 const Altadoc = () => {
   const { control, handleSubmit, formState: { errors }, reset, setValue  } = useForm({
     resolver: yupResolver(reviewValidationSchema),
@@ -80,12 +80,12 @@ const Altadoc = () => {
   })
     .then(r => r.json())
     .then(res => {
-      setMensaje(res.message); // guardás el mensaje del backend
+      setMensaje(res.message); 
       reset();
       setFotoSeleccionada(null);
     })
     .catch(err => {
-      setMensaje("Ha ocurrido un error"); // fallback
+      setMensaje("Ha ocurrido un error"); 
       console.error(err);
     });
   };
@@ -106,7 +106,8 @@ const Altadoc = () => {
         render={({ field }) => (
           <input {...field} type="hidden" />
         )}
-      /> //guarda en el form el id del tipo seleccionado
+      /> 
+      
 
       <div>
         <p style={styles.label}>Elegí el tipo de tu reseña</p>

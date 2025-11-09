@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { cargarResenias } from "../../store/slices/reviewsSlice";
 
-
+import toast, { Toaster } from "react-hot-toast";
 
 const ListadoDocs = () => {
    const navigate = useNavigate();
@@ -27,6 +27,40 @@ const ListadoDocs = () => {
     );
   }, []);
 
+  const eliminar = (id) => {
+    toast((t) => (
+      <div>
+        <p>¿Seguro que querés eliminar este review?</p>
+        <button onClick={() => { onEliminar(id); toast.dismiss(t.id); }}>OK</button>
+        <button onClick={() => toast.dismiss(t.id)}>Cancelar</button>
+      </div>
+    ), { duration: Infinity });
+  };
+
+  const onEliminar = async (id) => {
+  try {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`http://localhost:3000/v1/reviews/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (res.ok) {
+      const nuevasReviews = resenias.filter(r => r._id !== id);
+      dispatch(cargarResenias(nuevasReviews));
+      toast.success("Review eliminado correctamente");
+    } else {
+      toast.error("Error al eliminar el review");
+    }
+  } catch (err) {
+    console.log(err);
+    toast.error("Ocurrió un error al eliminar");
+  }
+};
+
   return (
     <div style={styles.listadoContenedor}>
     {resenias.length > 0 ? (
@@ -43,8 +77,8 @@ const ListadoDocs = () => {
                 </div>
 
                 <div style={styles.botones}>
-                <button style={styles.botonEditar}>Editar</button>
-                <button style={styles.botonEliminar}>Eliminar</button>
+                <button style={styles.botonEditar} >Editar</button>
+                <button style={styles.botonEliminar} onClick={() => eliminar(r._id)}>Eliminar</button>
                 </div>
             </div>
             </div>
@@ -53,7 +87,9 @@ const ListadoDocs = () => {
         <p style={{ color: "#fff", fontWeight: "bold" }}>
         No ha registrado ninguna reseña todavía
         </p>
+        
     )}
+    <Toaster /> 
     </div>
   )
 };
@@ -64,11 +100,10 @@ const styles = {
     overflowX: "auto",
     gap: "1rem",
     padding: "1rem 0",
+    height: "100%", 
   },
   tarjeta: {
-    flex: "0 0 32%",
-    marginright: "10rem",
-    minWidth: "130px",
+    flex: "0 0 32%",  
     border: "3px solid #000",
     backgroundColor: "#fff",
     borderRadius: "12px",
@@ -139,4 +174,5 @@ const styles = {
     cursor: "pointer",
   },
 };
+
 export default ListadoDocs;

@@ -48,7 +48,7 @@ const Login = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.token);
+        
 
         if (data) {
           localStorage.setItem("token", data.token);
