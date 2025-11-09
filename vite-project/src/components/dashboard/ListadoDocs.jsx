@@ -15,7 +15,7 @@ const ListadoDocs = () => {
     if (token === null) {
       navigate("/login");
     }
-    fetch("https://obl-full-stack-um6b.vercel.app/v1/reviews", {
+    fetch("http://localhost:3000/v1/reviews", {
       headers: {
         Authorization: `${token}`,
         "Content-Type": "application/json",
@@ -39,7 +39,7 @@ const ListadoDocs = () => {
             <div style={styles.infoYBotones}>
                 <div style={styles.info}>
                 <p style={styles.tipo}>Tipo: {r.etiquetaId.nombre}</p>
-                <p style={styles.fecha}>Fecha: {r.createdAt.toLocaleDateString()}</p>
+                <p style={styles.fecha}>Fecha: {r.createdAt}</p>
                 </div>
 
                 <div style={styles.botones}>
@@ -63,7 +63,6 @@ const styles = {
     flexDirection: "row",
     overflowX: "auto",
     gap: "1rem",
-    overflowX: "auto",
     padding: "1rem 0",
   },
   tarjeta: {

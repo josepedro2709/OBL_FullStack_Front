@@ -21,11 +21,13 @@ const styles = {
     padding: "1rem",
     boxShadow: "5px 5px 0 #000",
     display: "flex",
-    alignItems: "flex-end",
     gap: "1rem",
+    height: "500px", // altura fija para controlar scroll
   },
   columnaIzquierda: {
     flex: 3,
+    display: "flex",
+    flexDirection: "column",
   },
   columnaDerecha: {
     flex: 1,

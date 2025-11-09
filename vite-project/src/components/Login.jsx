@@ -36,7 +36,7 @@ const Login = () => {
 
     setError(false);
 
-    fetch("https://obl-full-stack-um6b.vercel.app/v1/auth/login", {
+    fetch("http://localhost:3000/v1/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

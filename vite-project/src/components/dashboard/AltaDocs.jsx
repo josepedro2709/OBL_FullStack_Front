@@ -3,6 +3,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch,useSelector  } from "react-redux";
 import reviewValidationSchema from "../../validations/reviewValidations";
+import { cargarTipos, cargarMultimedia  } from "../../store/slices/renderizadosSlice"
 
 
 const fotosDisponibles = [
@@ -11,61 +12,82 @@ const fotosDisponibles = [
   { id: 3, src: "https://res.cloudinary.com/ds1u1bvf3/image/upload/v1762630825/download_wuefo4.jpg", tipo: "Critica" },
   { id: 4, src: "https://res.cloudinary.com/ds1u1bvf3/image/upload/v1762630832/Rating_illustration_ginmij.jpg", tipo: "Comentario" },
 ];
-const opcionesContenido = [
-  { id: 1, nombre: "Película: Inception" },
-  { id: 2, nombre: "Película: Interstellar" },
-  { id: 3, nombre: "Serie: Dark" },
-  { id: 4, nombre: "Serie: Stranger Things" },
-];
 
 const Altadoc = () => {
   const { control, handleSubmit, formState: { errors }, reset, setValue  } = useForm({
     resolver: yupResolver(reviewValidationSchema),
-    defaultValues: { comentario: "", tipo: "", pelicula: "", foto: "" },
+    defaultValues: { comentario: "", tipo: "", foto: "", etiquetaId: "", multimedia: ""},
   });
   const dispatch = useDispatch();
 
   const [fotoSeleccionada, setFotoSeleccionada] = useState(null);
+  const [mensaje, setMensaje] = useState("");
   const Multimedias = useSelector(state => state.renderizados.listaMultimedias);
+  const Etiquetas = useSelector(state => state.renderizados.listaTipos);
   const token= localStorage.getItem("token");
  
 
   useEffect(() => {
-    fetch("http://localhost:3000/etiquetas", {
-        headers: {
-          Authorization: `${token}`,
-          "Content-Type": "application/json",
-        },
-      }).then((r) =>
-        r.json().then((datos) => {
-          dispatch(cargarTipos(datos));
-        })
-    );
-    fetch("http://localhost:3000/multimedias", {
-        headers: {
-          Authorization: `${token}`, 
-          "Content-Type": "application/json",
-        },
-      }).then((r) =>
-        r.json().then((datos) => {
-          dispatch(cargarMultimedia(datos));
-        }))
-
+    const fetchData = async () => {
+      console.log("Token usado:", token);
+      await fetch("http://localhost:3000/v1/etiquetas", {
+          headers: {
+            Authorization: `${token}`,
+            "Content-Type": "application/json",
+          },
+        }).then((r) =>
+          r.json().then((datos) => {
+            dispatch(cargarTipos(datos));
+          })
+      );
+      await fetch("http://localhost:3000/v1/multimedia", {
+          headers: {
+            Authorization: `${token}`, 
+            "Content-Type": "application/json",
+          },
+        }).then((r) =>
+          r.json().then((datos) => {
+            dispatch(cargarMultimedia(datos));
+          }))
+    };
+    fetchData();
   }, []);
 
 
   const handleFotoClick = (foto) => {
+    const tipoEncontrado = Etiquetas.find((t) => t.nombre === foto.tipo);
     setFotoSeleccionada(foto);
-    setValue("tipo", foto.tipo);
+    setValue("tipo", tipoEncontrado.nombre);
+    setValue("etiquetaId", tipoEncontrado._id);
     setValue("foto", foto.src);
   };
  
   const onSubmit = (data) => {
-    console.log("Datos validados:", data);
-    console.log("Foto seleccionada:", fotoSeleccionada);
-    reset(); 
-    setFotoSeleccionada(null); 
-    //fetch  backend
+   const payload = {
+    comentario: data.comentario,
+    multimediaId: data.multimedia,
+    imagen: data.foto,
+    etiquetaId: data.etiquetaId, // solo ID
+  };
+  console.log("Payload enviado:", payload);
+  fetch("http://localhost:3000/v1/review", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `${token}`,
+    },
+    body: JSON.stringify(payload),
+  })
+    .then(r => r.json())
+    .then(res => {
+      setMensaje(res.message); // guardás el mensaje del backend
+      reset();
+      setFotoSeleccionada(null);
+    })
+    .catch(err => {
+      setMensaje("Ha ocurrido un error"); // fallback
+      console.error(err);
+    });
   };
 
 
@@ -75,9 +97,17 @@ const Altadoc = () => {
         name="foto"
         control={control}
         render={({ field }) => (
-          <input {...field} type="hidden" />
+          <input {...field} type="hidden" /> //guarda en el form la url de la foto seleccionada
         )}
       />
+      <Controller
+        name="etiquetaId"
+        control={control}
+        render={({ field }) => (
+          <input {...field} type="hidden" />
+        )}
+      /> //guarda en el form el id del tipo seleccionado
+
       <div>
         <p style={styles.label}>Elegí el tipo de tu reseña</p>
         <div style={styles.fotosContainer}>
@@ -144,6 +174,7 @@ const Altadoc = () => {
       <button style={styles.button} type="submit" >
         Agregar Reseña
       </button>
+      {mensaje && <p style={{ color: "blue", fontWeight: "bold" }}>{mensaje}</p>}
     </form>
   );
 };
