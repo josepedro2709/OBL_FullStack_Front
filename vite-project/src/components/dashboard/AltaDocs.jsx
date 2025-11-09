@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch,useSelector  } from "react-redux";
 import reviewValidationSchema from "../../validations/reviewValidations";
 import { cargarTipos, cargarMultimedia  } from "../../store/slices/renderizadosSlice"
+import { crearResenia } from "../../store/slices/reviewsSlice";
 
 
 const fotosDisponibles = [
@@ -29,7 +30,6 @@ const Altadoc = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("Token usado:", token);
       await fetch("http://localhost:3000/v1/etiquetas", {
           headers: {
             Authorization: `${token}`,
@@ -63,24 +63,25 @@ const Altadoc = () => {
   };
  
   const onSubmit = (data) => {
-   const payload = {
-    comentario: data.comentario,
-    multimediaId: data.multimedia,
-    imagen: data.foto,
-    etiquetaId: data.etiquetaId, // solo ID
-  };
-  console.log("Payload enviado:", payload);
-  fetch("http://localhost:3000/v1/review", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `${token}`,
-    },
-    body: JSON.stringify(payload),
-  })
+    const payload = {
+      imagen: data.foto,
+      comentario: data.comentario,
+      etiquetaId: data.etiquetaId, 
+      multimediaId: data.multimedia,
+    };
+    console.log("Payload enviado:", payload);
+    fetch("http://localhost:3000/v1/review", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+      body: JSON.stringify(payload),
+    })
     .then(r => r.json())
     .then(res => {
       setMensaje(res.message); 
+      dispatch(crearResenia(res.review));
       reset();
       setFotoSeleccionada(null);
     })

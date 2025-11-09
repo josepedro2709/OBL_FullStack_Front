@@ -1,12 +1,14 @@
 import React, { useState,useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { cargarUsuario } from "../../store/slices/usuarioSlice";
 
-import { useSelector } from "react-redux";
 
 //imposibilidad de aceder al user. no lo encuentra en el llamado por alguna razon
 const MetricasUso = () => {
   const reviews = useSelector((state) => state.reviews.listaResenias);
-  const [usuario, setUsuario] = useState(null);
+  const dispatch = useDispatch();
   const totalReviews = reviews.length;
+
   useEffect(() => {
     const fetchUsuario = async () => {
       const email = localStorage.getItem("usuario");
@@ -16,21 +18,21 @@ const MetricasUso = () => {
       try {
         let token = localStorage.getItem("token");
         const res = await fetch(`http://localhost:3000/v1/user/email/${email}`,{
-           headers: {
-        Authorization: `${token}`,
-        "Content-Type": "application/json",
-      },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token}`,
+            },
         });
         const data = await res.json();
-        setUsuario(data);
+        dispatch(cargarUsuario(data));
       } catch (err) {
         console.log(err);
       }
     };
 
     fetchUsuario();
-  }, []);
-  console.log("usuario", usuario);
+  }, [dispatch]);
+  const usuario = useSelector((state) => state.usuario.usuario);
   const userPlan = usuario?.plan;
   const maxDocsPlus = 10;
 

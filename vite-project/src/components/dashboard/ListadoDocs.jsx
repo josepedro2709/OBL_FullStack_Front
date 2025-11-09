@@ -6,9 +6,9 @@ import { cargarResenias } from "../../store/slices/reviewsSlice";
 import toast, { Toaster } from "react-hot-toast";
 
 const ListadoDocs = () => {
-   const navigate = useNavigate();
-   const dispatch = useDispatch();
-   const resenias = useSelector((state) => state.reviews.listaResenias);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const resenias = useSelector((state) => state.reviews.listaResenias);
 
   useEffect(() => {
     let token = localStorage.getItem("token");
@@ -38,28 +38,28 @@ const ListadoDocs = () => {
   };
 
   const onEliminar = async (id) => {
-  try {
-    const token = localStorage.getItem("token");
-    const res = await fetch(`http://localhost:3000/v1/reviews/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`http://localhost:3000/v1/reviews/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      });
 
-    if (res.ok) {
-      const nuevasReviews = resenias.filter(r => r._id !== id);
-      dispatch(cargarResenias(nuevasReviews));
-      toast.success("Review eliminado correctamente");
-    } else {
-      toast.error("Error al eliminar el review");
+      if (res.ok) {
+        const nuevasReviews = resenias.filter(r => r._id !== id);
+        dispatch(cargarResenias(nuevasReviews));
+        toast.success("Review eliminado correctamente");
+      } else {
+        toast.error("Error al eliminar el review");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Ocurrió un error al eliminar");
     }
-  } catch (err) {
-    console.log(err);
-    toast.error("Ocurrió un error al eliminar");
-  }
-};
+  };
 
   return (
     <div style={styles.listadoContenedor}>

@@ -1,4 +1,73 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { cargarUsuario } from "../../store/slices/usuarioSlice";
+
+
+const CambioPlan = () => {
+    const dispatch=useDispatch();
+    const usuario = useSelector((state) => state.usuario.usuario);
+    const token = localStorage.getItem("token");
+    const [mensaje, setMensaje] = useState("");
+    if (!usuario) return <p>Cargando...</p>;
+
+    const cambiarPlan = () => {
+      if (usuario && usuario.plan === "plus") {
+        const payload = { plan: "premium" };
+        fetch(`http://localhost:3000/v1/user`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+          body: JSON.stringify(payload),
+        })
+        .then(r => r.json())
+        .then(r => {
+          dispatch(cargarUsuario({ ...usuario, plan: "premium" }));
+          setMensaje(r.message); 
+        
+        })
+        .catch(err => {
+          setMensaje("Ha ocurrido un error"); 
+        });
+
+      } else {
+        setMensaje("Tu plan ya es premium");
+      }
+    
+    };
+
+    return (
+      
+      <div style={styles.container}>
+          {mensaje && <p style={{ color: "blue", fontWeight: "bold" }}>{mensaje+"!"}</p>}
+        <div>
+          <span style={styles.label}>Tu plan es: </span>
+          <span style={styles.planText}>{usuario.plan}</span>
+        </div>
+        <div>
+          {usuario.plan === "plus" ? (
+            <>
+              <span style={styles.label}>Seleccione si desea promover su plan a Premium:</span>
+              <br />
+              <button style={styles.button} onClick={cambiarPlan}>
+                Aumentar Plan
+              </button>
+            </>
+          ) : (
+            <>
+              <button disabled style={styles.buttonDisabled} onClick={cambiarPlan}>
+                  Cambiar Plan
+              </button>
+              <br />
+              <span style={styles.label}>¡Ya tienes el plan Premium! Contactate si deseas bajar el nivel de tu suscripción.</span>
+            </>
+          )}
+          <br />
+        </div>
+      </div>
+    );
+};
 
 const styles = {
   container: {
@@ -27,32 +96,15 @@ const styles = {
     fontWeight: "bold",
     alignSelf: "flex-start",
   },
+  buttonDisabled: {
+    padding: "0.5rem 1rem",
+    backgroundColor: "#999", 
+    color: "#ccc",           
+    border: "none",
+    borderRadius: "8px",
+    cursor: "not-allowed",
+    fontWeight: "bold",
+    opacity: 0.6,             
+  },
 };
-
-const CambioPlan = () => {
-  const [plan, setPlan] = useState("Básico"); 
-
-  const cambiarPlan = () => {
-    //temporal 
-    setPlan("Plus");
-    alert("Tu plan ha sido promovido a Plus");
-  };
-
-  return (
-    <div style={styles.container}>
-      <div>
-        <span style={styles.label}>Tu plan es: </span>
-        <span style={styles.planText}>{plan}</span>
-      </div>
-      <div>
-        <span style={styles.label}>Seleccione si desea promover su plan a Plus:</span>
-        <br />
-        <button style={styles.button} onClick={cambiarPlan}>
-          Cambiar Plan
-        </button>
-      </div>
-    </div>
-  );
-};
-
 export default CambioPlan;

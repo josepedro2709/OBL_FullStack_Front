@@ -2,12 +2,14 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom"; 
 import { resetReviews } from "../../store/slices/reviewsSlice";
+import { resetUsuario } from "../../store/slices/usuarioSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cerrarSesion = () => {
-   dispatch(resetReviews());
+    dispatch(resetReviews());
+    dispatch(resetUsuario());
     localStorage.removeItem("token");
     localStorage.removeItem("usuario"); 
     navigate("/"); 
