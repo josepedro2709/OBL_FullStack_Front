@@ -30,10 +30,10 @@ const styles = {
 };
 
 const CambioPlan = () => {
-  const [plan, setPlan] = useState("Básico"); // ejemplo inicial
+  const [plan, setPlan] = useState("Básico"); 
 
   const cambiarPlan = () => {
-    // Aquí se puede integrar la lógica real de cambio de plan
+    //temporal 
     setPlan("Plus");
     alert("Tu plan ha sido promovido a Plus");
   };

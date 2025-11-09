@@ -3,8 +3,8 @@ import Header from "./Header";
 import Metricas from "./Metricas";
 import Graficos from "./Graficos";
 import ListadoDocs from "./ListadoDocs";
-import AgregarDoc from "./AltaDoc";
-import CambioPlan from "./CambioPlan";
+import AgregarDoc from "./AltaDocs";
+import CambioPlan from "./CambioPlanU";
 
 
 const styles = {
@@ -21,6 +21,7 @@ const styles = {
     padding: "1rem",
     boxShadow: "5px 5px 0 #000",
     display: "flex",
+    alignItems: "flex-end",
     gap: "1rem",
   },
   columnaIzquierda: {
@@ -34,10 +35,14 @@ const styles = {
     gap: "1rem",
   },
   columnaIzquierdaInferior: {
-    flex: 1,          
+    backgroundColor: "#3761a6",       
+    border: "3px solid #000",      // Borde negro grueso
+    borderRadius: "12px",          // Bordes redondeados
+    padding: "1rem",               // Espacio interno entre los componentes
+    marginTop: "1rem",             
     display: "flex",
     flexDirection: "column",
-    gap: "1rem",
+    gap: "1rem",                   // Espacio entre los dos componentes internos
   },
   columnaDerechaInferior: {
     flex: 3,         
@@ -60,8 +65,8 @@ const Home = () => {
       </div>
       <div style={styles.seccionInferior}>
         <div style={styles.columnaIzquierdaInferior}>
-          <CambioPlan />
           <Metricas />
+          <CambioPlan />
         </div>
         <div style={styles.columnaDerechaInferior}>
           <Graficos />

@@ -1,3 +1,62 @@
+import React, { useEffect} from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { cargarResenias } from "../../store/slices/reviewsSlice";
+
+
+
+const ListadoDocs = () => {
+   const navigate = useNavigate();
+   const dispatch = useDispatch();
+   const resenias = useSelector((state) => state.reviews.listaResenias);
+
+  useEffect(() => {
+    let token = localStorage.getItem("token");
+    if (token === null) {
+      navigate("/login");
+    }
+    fetch("https://obl-full-stack-um6b.vercel.app/v1/reviews", {
+      headers: {
+        Authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+    }).then((r) =>
+      r.json().then((datos) => {
+        dispatch(cargarResenias(datos));
+      })
+    );
+  }, []);
+
+  return (
+    <div style={styles.listadoContenedor}>
+    {resenias.length > 0 ? (
+        resenias.map((r) => (
+            <div key={r._id} style={styles.tarjeta}>
+            <img src={r.imagen} alt={r.multimedia} style={styles.imagen} />
+            <h5 style={styles.titulo}>{r.multimediaId.titulo}</h5>
+            <p style={styles.comentario}>{r.comentario}</p>
+
+            <div style={styles.infoYBotones}>
+                <div style={styles.info}>
+                <p style={styles.tipo}>Tipo: {r.etiquetaId.nombre}</p>
+                <p style={styles.fecha}>Fecha: {r.createdAt.toLocaleDateString()}</p>
+                </div>
+
+                <div style={styles.botones}>
+                <button style={styles.botonEditar}>Editar</button>
+                <button style={styles.botonEliminar}>Eliminar</button>
+                </div>
+            </div>
+            </div>
+        ))
+    ) : (
+        <p style={{ color: "#fff", fontWeight: "bold" }}>
+        No ha registrado ninguna reseña todavía
+        </p>
+    )}
+    </div>
+  )
+};
 const styles = {
   listadoContenedor: {
     display: "flex",
@@ -5,10 +64,11 @@ const styles = {
     overflowX: "auto",
     gap: "1rem",
     overflowX: "auto",
-    padding: "1rem",
+    padding: "1rem 0",
   },
   tarjeta: {
-    flex: "0 0 calc(33.33% - 1rem)",
+    flex: "0 0 32%",
+    marginright: "10rem",
     minWidth: "130px",
     border: "3px solid #000",
     backgroundColor: "#fff",
@@ -80,76 +140,4 @@ const styles = {
     cursor: "pointer",
   },
 };
-
-const ListadoDocs = () => {
-  const reseñas = [
-    {
-      id: 1,
-      imagen: "imagen",
-      multimedia: "Película: Inception",
-      comentario: "Excelente trama y fotografía impecable.",
-      tipo: "Cine",
-      fecha: "2025-11-07",
-    },
-    {
-      id: 2,
-      imagen: "imagen",
-      multimedia: "Serie: Dark",
-      comentario: "Intrigante y compleja, una obra maestra.",
-      tipo: "Serie",
-      fecha: "2025-10-28",
-    },
-     {
-      id: 3,
-      imagen: "imagen",
-      multimedia: "Serie: Dark",
-      comentario: "Intrigante y compleja, una obra maestra.",
-      tipo: "Serie",
-      fecha: "2025-10-28",
-    },
-    {
-      id: 4,
-      imagen: "imagen",
-      multimedia: "Serie: Dark",
-      comentario: "Intrigante y compleja, una obra maestra.",
-      tipo: "Serie",
-      fecha: "2025-10-28",
-    },
-    {
-      id: 5,
-      imagen: "imagen",
-      multimedia: "Serie: Dark",
-      comentario: "Intrigante y compleja, una obra maestra.",
-      tipo: "Serie",
-      fecha: "2025-10-28",
-    }
-  ];
-
-  return (
-    <div style={styles.listadoContenedor}>
-      {reseñas.map((r) => (
-        <div key={r.id} style={styles.tarjeta}>
-          <img src={r.imagen} alt={r.multimedia} style={styles.imagen} />
-          <h5 style={styles.titulo}>{r.multimedia}</h5>
-          <p style={styles.comentario}>{r.comentario}</p>
-
-          <div style={styles.infoYBotones}>
-            <div style={styles.info}>
-              <p style={styles.tipo}>Tipo: {r.tipo}</p>
-              <p style={styles.fecha}>Fecha: {r.fecha}</p>
-            </div>
-
-            <div style={styles.botones}>
-              <button style={styles.botonEditar}>Editar</button>
-              <button style={styles.botonEliminar}>Eliminar</button>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
-
 export default ListadoDocs;
-
-
