@@ -81,9 +81,11 @@ const Altadoc = () => {
     .then(r => r.json())
     .then(res => {
       setMensaje(res.message); 
-      dispatch(crearResenia(res.review));
       reset();
       setFotoSeleccionada(null);
+      if (res.review){
+        dispatch(crearResenia(res.review));
+      }
     })
     .catch(err => {
       setMensaje("Ha ocurrido un error"); 
