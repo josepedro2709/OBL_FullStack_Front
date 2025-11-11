@@ -61,12 +61,11 @@ const Registro = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
 
-        if (data) {
-          localStorage.setItem("token", data);
+        if (data.token) {
+          localStorage.setItem("token", data.token);
           localStorage.setItem("usuario", campoUser);
-          /* navigate("/multimedia"); */
+          navigate("/");
         } else {
           setError(true);
         }
@@ -153,7 +152,7 @@ const Registro = () => {
         </button>
 
         <div className="text-center">
-          <Link to="/" className="text-decoration-none">
+          <Link to="/login" className="text-decoration-none">
             ¿Ya tenés cuenta? Iniciá sesión
           </Link>
         </div>

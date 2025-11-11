@@ -8,7 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 const ListadoDocs = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const resenias = useSelector((state) => state.reviews.listaResenias);
+  const resenias = useSelector((state) => state.reviews.listaResenias) || [];
   const URL_BASE = import.meta.env.VITE_URL_BASE;
   let token = localStorage.getItem("token");
 
@@ -23,7 +23,11 @@ const ListadoDocs = () => {
       },
     }).then((r) =>
       r.json().then((datos) => {
-        dispatch(cargarResenias(datos));
+        if (Array.isArray(datos)) {
+          dispatch(cargarResenias(datos));
+        } else {
+          dispatch(cargarResenias([]));
+        }
       })
     );
   }, []);

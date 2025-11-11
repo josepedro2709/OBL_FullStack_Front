@@ -43,7 +43,7 @@ const Login = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data) {
+        if (data.token) {
           localStorage.setItem("token", data.token);
           localStorage.setItem("usuario", campoEmail.current.value);
           navigate("/dashboard/home");
