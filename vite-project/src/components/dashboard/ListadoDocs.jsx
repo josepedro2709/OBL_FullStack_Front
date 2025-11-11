@@ -1,7 +1,7 @@
 import React, { useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { cargarResenias } from "../../store/slices/reviewsSlice";
+import { cargarResenias, deleteResenia } from "../../store/slices/reviewsSlice";
 
 import toast, { Toaster } from "react-hot-toast";
 
@@ -49,14 +49,12 @@ const ListadoDocs = () => {
       });
 
       if (res.ok) {
-        const nuevasReviews = resenias.filter(r => r._id !== id);
-        dispatch(cargarResenias(nuevasReviews));
+        dispatch(deleteResenia(id));
         toast.success("Review eliminado correctamente");
       } else {
         toast.error("Error al eliminar el review");
       }
     } catch (err) {
-      console.log(err);
       toast.error("Ocurrió un error al eliminar");
     }
   };

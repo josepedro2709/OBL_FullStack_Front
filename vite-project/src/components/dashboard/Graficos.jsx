@@ -1,43 +1,133 @@
 import React from "react";
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import { useSelector } from "react-redux";
+import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const GraficaResenas = () => {
   const reviews = useSelector((state) => state.reviews.listaResenias);
-  console.log("reviews en grafica", reviews);
   
-  const data = [
-    { name: "Critica", value: reviews.filter(r => r.etiquetaId._id  === "68e1b1b90cac8b39d1263ff3").length },
-    { name: "Comentario", value: reviews.filter(r => r.etiquetaId._id  === "68e1b1b90cac8b39d1263ff5").length },
-    { name: "Recomendacion", value: reviews.filter(r => r.etiquetaId._id === "68e1b1b90cac8b39d1263ff4").length },
-    { name: "Resumen", value: reviews.filter(r => r.etiquetaId._id  === "68e1b1b90cac8b39d1263ff7").length },
-  ];
-  const COLORS = ["#FF4500", "#FF6347", "#FF8C00", "#FFA500"];
-  console.log("data", data);
-  return ( 
-    
-    <div style={{ width: "100%", height: 300, background:"#8884d8"}}>
-      <PieChart width="100%" height={300}>
-        <Pie
-          data={data}
-          dataKey="value"
-          nameKey="name"
-          cx="50%"
-          cy="50%"
-          outerRadius="80%"
-          label
-        >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-        <Tooltip />
-        <Legend />
-      </PieChart>
+  const resenias = Object.values(
+    reviews.reduce((acc, r) => {
+      const id = r.etiquetaId._id;
+      const nombre = r.etiquetaId.nombre;
+
+      if (!acc[id]) {
+        acc[id] = { name: nombre, value: 0 };
+      }
+      acc[id].value += 1;
+
+      return acc;
+    }, {})
+  );
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          color: '#000',
+          font: {
+            size: 14,
+            family: 'Poppins, sans-serif',
+            weight: 'bold',
+          },
+        },
+      },
+      title: {
+        display: true,
+        text: 'Reseñas por Tipo',
+        color: '#122ae0',
+        font: {
+          size: 18,
+          weight: 'bold',
+          family: 'Poppins, sans-serif',
+        },
+        padding: {
+          bottom: 20,
+        },
+      },
+      tooltip: {
+        backgroundColor: '#122ae0',
+        titleFont: { size: 14, weight: 'bold' },
+        bodyFont: { size: 13 },
+        padding: 10,
+        cornerRadius: 8,
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: '#000',
+          font: { size: 13, family: 'Poppins, sans-serif' },
+        },
+        grid: { color: '#e0e0e0' },
+      },
+      y: {
+        ticks: {
+          color: '#000',
+          font: { size: 13, family: 'Poppins, sans-serif' },
+        },
+        grid: { color: '#e0e0e0' },
+      },
+    },
+  };
+
+  const data = {
+    labels: resenias.map(t => t.name), // aquí usamos el nombre, no el índice
+    datasets: [
+      {
+        label: 'Cantidad',
+        data: resenias.map(t => t.value),
+        backgroundColor: '#122ae0',
+        borderColor: '#000',
+        borderWidth: 2,
+        hoverBackgroundColor: '#1d39ff',
+        hoverBorderColor: '#000',
+      },
+    ],
+  };
+
+  return (
+    <div style={styles.contenedor}>
+      <h2 style={styles.titulo}>Reseñas registradas</h2>
+      <div style={styles.graficoContenedor}>
+        <Bar options={options} data={data} />
+      </div>
     </div>
   );
-}
+};
+
+const styles = {
+  contenedor: {
+    backgroundColor: '#fff',
+    border: '3px solid #000',
+    borderRadius: '12px',
+    boxShadow: '4px 4px 0 #000',
+    padding: '1rem',
+    width: '100%',
+    maxWidth: '600px',
+    margin: '1rem auto',
+  },
+  titulo: {
+    color: '#122ae0',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: '1rem',
+  },
+  graficoContenedor: {
+    height: '350px',
+  },
+};
 
 export default GraficaResenas;
-

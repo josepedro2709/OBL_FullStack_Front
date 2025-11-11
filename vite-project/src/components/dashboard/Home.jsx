@@ -89,7 +89,7 @@ const styles = {
      flex: 2,               
   },
   columnaDerechaInferior: {
-    backgroundColor: "#3761a6",       
+    backgroundColor: "#a9b4c8ff",       
     border: "3px solid #000",     
     borderRadius: "12px",          
     padding: "1rem",               
