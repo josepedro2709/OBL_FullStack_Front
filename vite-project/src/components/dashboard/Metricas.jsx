@@ -1,13 +1,13 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { cargarUsuario } from "../../store/slices/usuarioSlice";
-
 
 //imposibilidad de aceder al user. no lo encuentra en el llamado por alguna razon
 const MetricasUso = () => {
   const reviews = useSelector((state) => state.reviews.listaResenias);
   const dispatch = useDispatch();
   const totalReviews = reviews.length;
+  const URL_BASE = import.meta.env.VITE_URL_BASE;
 
   useEffect(() => {
     const fetchUsuario = async () => {
@@ -17,11 +17,11 @@ const MetricasUso = () => {
 
       try {
         let token = localStorage.getItem("token");
-        const res = await fetch(`http://localhost:3000/v1/user/email/${email}`,{
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `${token}`,
-            },
+        const res = await fetch(`${URL_BASE}/v1/user/email/${email}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
         });
         const data = await res.json();
         dispatch(cargarUsuario(data));
@@ -39,7 +39,7 @@ const MetricasUso = () => {
   const porcentaje = Math.min((totalReviews / maxDocsPlus) * 100, 100);
   return (
     <div style={styles.container}>
-      {userPlan === 'plus' ? (
+      {userPlan === "plus" ? (
         <>
           <div style={styles.label}>Uso de documentos:</div>
           <div style={styles.progressBarContainer}>
@@ -52,7 +52,6 @@ const MetricasUso = () => {
       )}
     </div>
   );
-
 };
 
 const styles = {

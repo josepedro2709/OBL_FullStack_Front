@@ -84,7 +84,7 @@ const GraficaResenas = () => {
   };
 
   const data = {
-    labels: resenias.map(t => t.name), // aquí usamos el nombre, no el índice
+    labels: resenias.map(t => t.name), 
     datasets: [
       {
         label: 'Cantidad',

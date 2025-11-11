@@ -1,58 +1,91 @@
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch,useSelector  } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import reviewValidationSchema from "../../validations/reviewValidations";
-import { cargarTipos, cargarMultimedia  } from "../../store/slices/renderizadosSlice"
+import {
+  cargarTipos,
+  cargarMultimedia,
+} from "../../store/slices/renderizadosSlice";
 import { crearResenia } from "../../store/slices/reviewsSlice";
 
+const URL_BASE = import.meta.env.VITE_URL_BASE;
 
 const fotosDisponibles = [
-  { id: 1, src: "https://res.cloudinary.com/ds1u1bvf3/image/upload/v1762630649/download_1_mx2z4p.jpg", tipo: "Resumen" },
-  { id: 2, src: "https://res.cloudinary.com/ds1u1bvf3/image/upload/v1762630825/Trim_Possible_in_Hanoi_Vietnam_mfkyhp.jpg", tipo: "Recomendacion" },
-  { id: 3, src: "https://res.cloudinary.com/ds1u1bvf3/image/upload/v1762630825/download_wuefo4.jpg", tipo: "Critica" },
-  { id: 4, src: "https://res.cloudinary.com/ds1u1bvf3/image/upload/v1762630832/Rating_illustration_ginmij.jpg", tipo: "Comentario" },
+  {
+    id: 1,
+    src: "https://res.cloudinary.com/ds1u1bvf3/image/upload/v1762630649/download_1_mx2z4p.jpg",
+    tipo: "Resumen",
+  },
+  {
+    id: 2,
+    src: "https://res.cloudinary.com/ds1u1bvf3/image/upload/v1762630825/Trim_Possible_in_Hanoi_Vietnam_mfkyhp.jpg",
+    tipo: "Recomendacion",
+  },
+  {
+    id: 3,
+    src: "https://res.cloudinary.com/ds1u1bvf3/image/upload/v1762630825/download_wuefo4.jpg",
+    tipo: "Critica",
+  },
+  {
+    id: 4,
+    src: "https://res.cloudinary.com/ds1u1bvf3/image/upload/v1762630832/Rating_illustration_ginmij.jpg",
+    tipo: "Comentario",
+  },
 ];
 //problema con campo etiquetaId y comentario: aunque en el payload del network puedo ver que esta ok me marca como si llegase mal
 const Altadoc = () => {
-  const { control, handleSubmit, formState: { errors }, reset, setValue  } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+  } = useForm({
     resolver: yupResolver(reviewValidationSchema),
-    defaultValues: { comentario: "", tipo: "", foto: "", etiquetaId: "", multimedia: ""},
+    defaultValues: {
+      comentario: "",
+      tipo: "",
+      foto: "",
+      etiquetaId: "",
+      multimedia: "",
+    },
   });
   const dispatch = useDispatch();
 
   const [fotoSeleccionada, setFotoSeleccionada] = useState(null);
   const [mensaje, setMensaje] = useState("");
-  const Multimedias = useSelector(state => state.renderizados.listaMultimedias);
-  const Etiquetas = useSelector(state => state.renderizados.listaTipos);
-  const token= localStorage.getItem("token");
- 
+  const Multimedias = useSelector(
+    (state) => state.renderizados.listaMultimedias
+  );
+  const Etiquetas = useSelector((state) => state.renderizados.listaTipos);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetch("http://localhost:3000/v1/etiquetas", {
-          headers: {
-            Authorization: `${token}`,
-            "Content-Type": "application/json",
-          },
-        }).then((r) =>
-          r.json().then((datos) => {
-            dispatch(cargarTipos(datos));
-          })
+      await fetch(`${URL_BASE}/v1/etiquetas`, {
+        headers: {
+          Authorization: `${token}`,
+          "Content-Type": "application/json",
+        },
+      }).then((r) =>
+        r.json().then((datos) => {
+          dispatch(cargarTipos(datos));
+        })
       );
-      await fetch("http://localhost:3000/v1/multimedia", {
-          headers: {
-            Authorization: `${token}`, 
-            "Content-Type": "application/json",
-          },
-        }).then((r) =>
-          r.json().then((datos) => {
-            dispatch(cargarMultimedia(datos));
-          }))
+      await fetch(`${URL_BASE}/v1/multimedia`, {
+        headers: {
+          Authorization: `${token}`,
+          "Content-Type": "application/json",
+        },
+      }).then((r) =>
+        r.json().then((datos) => {
+          dispatch(cargarMultimedia(datos));
+        })
+      );
     };
     fetchData();
   }, []);
-
 
   const handleFotoClick = (foto) => {
     const tipoEncontrado = Etiquetas.find((t) => t.nombre === foto.tipo);
@@ -61,16 +94,16 @@ const Altadoc = () => {
     setValue("etiquetaId", tipoEncontrado._id);
     setValue("foto", foto.src);
   };
- 
+
   const onSubmit = (data) => {
     const payload = {
       imagen: data.foto,
       comentario: data.comentario,
-      etiquetaId: data.etiquetaId, 
+      etiquetaId: data.etiquetaId,
       multimediaId: data.multimedia,
     };
     console.log("Payload enviado:", payload);
-    fetch("http://localhost:3000/v1/review", {
+    fetch(`${URL_BASE}/v1/review`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -78,21 +111,20 @@ const Altadoc = () => {
       },
       body: JSON.stringify(payload),
     })
-    .then(r => r.json())
-    .then(res => {
-      setMensaje(res.message); 
-      reset();
-      setFotoSeleccionada(null);
-      if (res.review){
-        dispatch(crearResenia(res.review));
-      }
-    })
-    .catch(err => {
-      setMensaje("Ha ocurrido un error"); 
-      console.error(err);
-    });
+      .then((r) => r.json())
+      .then((res) => {
+        setMensaje(res.message);
+        reset();
+        setFotoSeleccionada(null);
+        if (res.review) {
+          dispatch(crearResenia(res.review));
+        }
+      })
+      .catch((err) => {
+        setMensaje("Ha ocurrido un error");
+        console.error(err);
+      });
   };
-
 
   return (
     <form style={styles.formContainer} onSubmit={handleSubmit(onSubmit)}>
@@ -106,11 +138,8 @@ const Altadoc = () => {
       <Controller
         name="etiquetaId"
         control={control}
-        render={({ field }) => (
-          <input {...field} type="hidden" />
-        )}
-      /> 
-      
+        render={({ field }) => <input {...field} type="hidden" />}
+      />
 
       <div>
         <p style={styles.label}>Elegí el tipo de tu reseña</p>
@@ -118,8 +147,13 @@ const Altadoc = () => {
           {fotosDisponibles.map((f) => (
             <img
               name="foto"
-              key={f.id} src={f.src} alt={f.tipo}
-              style={{ ...styles.foto, ...(fotoSeleccionada?.id === f.id ? styles.selectedFoto : {}), }}
+              key={f.id}
+              src={f.src}
+              alt={f.tipo}
+              style={{
+                ...styles.foto,
+                ...(fotoSeleccionada?.id === f.id ? styles.selectedFoto : {}),
+              }}
               onClick={() => handleFotoClick(f)}
             />
           ))}
@@ -131,12 +165,7 @@ const Altadoc = () => {
           name="tipo"
           control={control}
           render={({ field }) => (
-            <input
-              {...field}
-              style={styles.input}
-              type="text"
-              readOnly
-            />
+            <input {...field} style={styles.input} type="text" readOnly />
           )}
         />
         <p style={styles.label}>Seleccioná el contenido a reseñar</p>
@@ -157,14 +186,14 @@ const Altadoc = () => {
         {errors.multimedia && (
           <p style={styles.error}>{errors.multimedia.message}</p>
         )}
-      
       </div>
 
       <div>
         <p style={styles.label}>Comentario</p>
         <Controller
           name="comentario"
-          control={control} render={({ field }) => (
+          control={control}
+          render={({ field }) => (
             <textarea
               {...field}
               style={styles.textarea}
@@ -172,13 +201,17 @@ const Altadoc = () => {
             />
           )}
         />
-        {errors.comentario ? <p className="error">{errors.comentario.message}</p> : null}
+        {errors.comentario ? (
+          <p className="error">{errors.comentario.message}</p>
+        ) : null}
       </div>
 
-      <button style={styles.button} type="submit" >
+      <button style={styles.button} type="submit">
         Agregar Reseña
       </button>
-      {mensaje && <p style={{ color: "blue", fontWeight: "bold" }}>{mensaje}</p>}
+      {mensaje && (
+        <p style={{ color: "blue", fontWeight: "bold" }}>{mensaje}</p>
+      )}
     </form>
   );
 };
