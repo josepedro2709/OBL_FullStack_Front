@@ -1,4 +1,4 @@
-import React, { useEffect} from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { cargarResenias } from "../../store/slices/reviewsSlice";
@@ -9,13 +9,14 @@ const ListadoDocs = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const resenias = useSelector((state) => state.reviews.listaResenias);
+  const URL_BASE = import.meta.env.VITE_URL_BASE;
 
   useEffect(() => {
     let token = localStorage.getItem("token");
     if (token === null) {
       navigate("/login");
     }
-    fetch("http://localhost:3000/v1/reviews", {
+    fetch(`${URL_BASE}/v1/reviews`, {
       headers: {
         Authorization: `${token}`,
         "Content-Type": "application/json",
@@ -28,13 +29,23 @@ const ListadoDocs = () => {
   }, []);
 
   const eliminar = (id) => {
-    toast((t) => (
-      <div>
-        <p>¿Seguro que querés eliminar este review?</p>
-        <button onClick={() => { onEliminar(id); toast.dismiss(t.id); }}>OK</button>
-        <button onClick={() => toast.dismiss(t.id)}>Cancelar</button>
-      </div>
-    ), { duration: Infinity });
+    toast(
+      (t) => (
+        <div>
+          <p>¿Seguro que querés eliminar este review?</p>
+          <button
+            onClick={() => {
+              onEliminar(id);
+              toast.dismiss(t.id);
+            }}
+          >
+            OK
+          </button>
+          <button onClick={() => toast.dismiss(t.id)}>Cancelar</button>
+        </div>
+      ),
+      { duration: Infinity }
+    );
   };
 
   const onEliminar = async (id) => {
@@ -49,7 +60,7 @@ const ListadoDocs = () => {
       });
 
       if (res.ok) {
-        const nuevasReviews = resenias.filter(r => r._id !== id);
+        const nuevasReviews = resenias.filter((r) => r._id !== id);
         dispatch(cargarResenias(nuevasReviews));
         toast.success("Review eliminado correctamente");
       } else {
@@ -63,35 +74,39 @@ const ListadoDocs = () => {
 
   return (
     <div style={styles.listadoContenedor}>
-    {resenias.length > 0 ? (
+      {resenias.length > 0 ? (
         resenias.map((r) => (
-            <div key={r._id} style={styles.tarjeta}>
+          <div key={r._id} style={styles.tarjeta}>
             <img src={r.imagen} alt={r.multimedia} style={styles.imagen} />
             <h5 style={styles.titulo}>{r.multimediaId.titulo}</h5>
             <p style={styles.comentario}>{r.comentario}</p>
 
             <div style={styles.infoYBotones}>
-                <div style={styles.info}>
+              <div style={styles.info}>
                 <p style={styles.tipo}>Tipo: {r.etiquetaId.nombre}</p>
                 <p style={styles.fecha}>Fecha: {r.createdAt}</p>
-                </div>
+              </div>
 
-                <div style={styles.botones}>
-                <button style={styles.botonEditar} >Editar</button>
-                <button style={styles.botonEliminar} onClick={() => eliminar(r._id)}>Eliminar</button>
-                </div>
+              <div style={styles.botones}>
+                <button style={styles.botonEditar}>Editar</button>
+                <button
+                  style={styles.botonEliminar}
+                  onClick={() => eliminar(r._id)}
+                >
+                  Eliminar
+                </button>
+              </div>
             </div>
-            </div>
+          </div>
         ))
-    ) : (
+      ) : (
         <p style={{ color: "#fff", fontWeight: "bold" }}>
-        No ha registrado ninguna reseña todavía
+          No ha registrado ninguna reseña todavía
         </p>
-        
-    )}
-    <Toaster /> 
+      )}
+      <Toaster />
     </div>
-  )
+  );
 };
 const styles = {
   listadoContenedor: {
@@ -100,10 +115,10 @@ const styles = {
     overflowX: "auto",
     gap: "1rem",
     padding: "1rem 0",
-    height: "100%", 
+    height: "100%",
   },
   tarjeta: {
-    flex: "0 0 32%",  
+    flex: "0 0 32%",
     border: "3px solid #000",
     backgroundColor: "#fff",
     borderRadius: "12px",

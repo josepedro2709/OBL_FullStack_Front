@@ -12,6 +12,8 @@ const Registro = () => {
   const pass = useRef(null);
   const confirmPass = useRef(null);
 
+  const URL_BASE = import.meta.env.VITE_URL_BASE;
+
   useEffect(() => {
     localStorage.clear();
     setBtn(true);
@@ -46,7 +48,7 @@ const Registro = () => {
 
     setError(false);
 
-    fetch("https://obl-full-stack-um6b.vercel.app/v1/auth/signup", {
+    fetch(`${URL_BASE}/v1/auth/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
