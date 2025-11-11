@@ -12,7 +12,7 @@ const Header = () => {
     dispatch(resetUsuario());
     localStorage.removeItem("token");
     localStorage.removeItem("usuario"); 
-    navigate("/"); 
+    navigate("/login"); 
  };
   return (
     <header style={styles.header}>

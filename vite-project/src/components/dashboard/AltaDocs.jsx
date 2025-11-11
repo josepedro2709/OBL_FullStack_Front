@@ -62,6 +62,9 @@ const Altadoc = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
+    if (token === null) {
+      navigate("/login");
+    }
     const fetchData = async () => {
       await fetch(`${URL_BASE}/v1/etiquetas`, {
         headers: {

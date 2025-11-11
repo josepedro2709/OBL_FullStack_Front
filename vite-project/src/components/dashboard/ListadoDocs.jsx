@@ -10,9 +10,9 @@ const ListadoDocs = () => {
   const dispatch = useDispatch();
   const resenias = useSelector((state) => state.reviews.listaResenias);
   const URL_BASE = import.meta.env.VITE_URL_BASE;
+  let token = localStorage.getItem("token");
 
   useEffect(() => {
-    let token = localStorage.getItem("token");
     if (token === null) {
       navigate("/login");
     }

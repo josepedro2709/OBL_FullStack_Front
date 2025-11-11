@@ -8,10 +8,13 @@ const MetricasUso = () => {
   const dispatch = useDispatch();
   const totalReviews = reviews.length;
   const URL_BASE = import.meta.env.VITE_URL_BASE;
+  const email = localStorage.getItem("usuario");
 
   useEffect(() => {
+    if (email === null) {
+      navigate("/login");
+    }
     const fetchUsuario = async () => {
-      const email = localStorage.getItem("usuario");
       console.log("email", email);
       if (!email) return;
 
