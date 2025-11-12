@@ -37,6 +37,17 @@ export const reviewsSlice = createSlice({
         (resenia) => resenia._id !== action.payload
       );
     },
+    editarResenia: (state, action) => {
+      if (!Array.isArray(state.listaResenias)) return;
+
+      const index = state.listaResenias.findIndex(
+        (resenia) => resenia._id === action.payload._id
+      );
+
+      if (index !== -1) {
+        state.listaResenias[index] = action.payload;
+      }
+    },
 
     // ✅ Reset general
     resetReviews: (state) => {
@@ -45,7 +56,12 @@ export const reviewsSlice = createSlice({
   },
 });
 
-export const { cargarResenias, crearResenia, deleteResenia, resetReviews } =
-  reviewsSlice.actions;
+export const {
+  cargarResenias,
+  crearResenia,
+  deleteResenia,
+  editarResenia,
+  resetReviews,
+} = reviewsSlice.actions;
 
 export default reviewsSlice.reducer;
