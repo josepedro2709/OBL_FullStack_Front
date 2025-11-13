@@ -49,7 +49,7 @@ const ListadoDocs = ({ filtro }) => {
       .then((datos) => dispatch(cargarMultimedia(datos)));
   }, []);
 
-  // 🔍 Filtrado por fecha según la selección del usuario
+  // Filtrado por fecha según la selección del usuario
   const filtrarPorFecha = (lista) => {
     if (filtro === "todos") return lista;
     const ahora = new Date();
@@ -187,7 +187,7 @@ const ListadoDocs = ({ filtro }) => {
                   onChange={(e) => setMultimediaEditada(e.target.value)}
                   style={styles.selectEdicion}
                 >
-                  <option value="">-- Elegí uno --</option>
+                  <option value="-1">-- Elegí uno --</option>
                   {Multimedias.map((m) => (
                     <option key={m._id} value={m._id}>
                       {m.titulo}
