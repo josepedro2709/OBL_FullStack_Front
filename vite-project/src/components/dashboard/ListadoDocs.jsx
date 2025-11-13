@@ -51,10 +51,7 @@ const ListadoDocs = ({ filtro }) => {
       .then((datos) => dispatch(cargarMultimedia(datos)));
   }, []);
 
-<<<<<<< HEAD
-=======
-  // Filtrado por fecha según la selección del usuario
->>>>>>> 157c5d6a821f227c0fafdb9376bf40c0e67b2e06
+  
   const filtrarPorFecha = (lista) => {
     if (filtro === "todos") return lista;
     const ahora = new Date();
