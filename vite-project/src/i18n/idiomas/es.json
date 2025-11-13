@@ -1,0 +1,113 @@
+{
+  "header": {
+    "title": "Mi Tablero",
+    "logout": "Cerrar sesión"
+  },
+
+  "home": {
+    "filters": {
+      "todos": "Histórico",
+      "mes": "Último Mes",
+      "semana": "Última Semana"
+    }
+    
+  },
+
+  "listadoDocs": {
+    "editSelect": "Seleccioná el contenido:",
+    "editComentario": "Comentario:",
+    "placeholderSeleccion": "-- Elegí uno --",
+    "noReviews": "No hay reseñas para este período",
+    "type": "Tipo:",
+    "date": "Fecha:",
+    "buttons": {
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "ok": "OK"
+    },
+    "toasts": {
+      "confirmDelete": "¿Seguro que querés eliminar este review?",
+      "deletedOk": "Review eliminado correctamente",
+      "deletedError": "Error al eliminar el review",
+      "deletedException": "Ocurrió un error al eliminar",
+      "updatedOk": "Review actualizado correctamente",
+      "updatedError": "Error al actualizar el review",
+      "updatedException": "Ocurrió un error al actualizar"
+    }
+  },
+
+  "agregarDoc": {
+    "chooseType": "Elegí el tipo de tu reseña",
+    "chooseContent": "Seleccioná el contenido a reseñar",
+    "placeholderSeleccion": "-- Elegí uno --",
+    "commentLabel": "Comentario",
+    "commentPlaceholder": "Escribí tu reseña...",
+    "submit": "Agregar Reseña",
+    "successMessage": "¡Reseña agregada con éxito!"
+  },
+
+  "metricas": {
+    "usageLabel": "Uso de documentos:",
+    "totalDocs": "Total documentos:"
+  },
+
+  "cambioPlan": {
+    "currentPlan": "Tu plan es:",
+    "upgradePrompt": "Seleccione si desea promover su plan a Premium:",
+    "upgradeButton": "Aumentar Plan",
+    "changeButton": "Cambiar Plan",
+    "premiumText": "¡Ya tienes el plan Premium! Contactate si deseas bajar el nivel de tu suscripción.",
+    "error": "Ha ocurrido un error",
+    "yaPremium": "Tu plan ya es premium"
+  },
+
+  "graficos": {
+    "title": "Reseñas registradas",
+    "noData": "No review data available"
+  },
+
+  "login": {
+    "title": "Login",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "submit": "Iniciar sesión",
+    "accesoSignUp": "¿No tenés una cuenta? Registrate aquí",
+    "errors": {
+      "emailInvalid": "Formato de correo inválido",
+      "emailRequired": "El correo es obligatorio",
+      "passwordRequired": "La contraseña es obligatoria"
+    }
+  },
+
+  "registro": {
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "submit": "Registrarse",
+    "accesoSignIn": "¿Ya tenés una cuenta? Iniciá sesión aquí",
+    "errors": {
+      "nameMin": "Debe tener al menos 2 caracteres",
+      "nameRequired": "El nombre es obligatorio",
+      "emailInvalid": "Formato de correo inválido",
+      "emailRequired": "El correo es obligatorio",
+      "passwordRequired": "La contraseña es obligatoria",
+      "confirmMatch": "Las contraseñas deben coincidir",
+      "confirmRequired": "Confirmar la contraseña es obligatorio"
+    }
+  },
+
+  "review": {
+    "errors": {
+      "fotoUrl": "Debe ingresar una imagen válida",
+      "fotoRequired": "La imagen es obligatoria",
+      "comentarioMin": "Mínimo 3 caracteres",
+      "comentarioMax": "Máximo 100 caracteres",
+      "comentarioRequired": "El comentario es obligatorio",
+      "tipoRequired": "Debe seleccionar una etiqueta",
+      "multimediaRequired": "Debe seleccionar un contenido al que reseñar"
+    }
+  }
+}

@@ -5,17 +5,20 @@ import Graficos from "./Graficos";
 import ListadoDocs from "./ListadoDocs";
 import AgregarDoc from "./AltaDocs";
 import CambioPlan from "./CambioPlanU";
+import { useTranslation } from "react-i18next";
 
 const Home = () => {
-  // 👇 Estado para el filtro
   const [filtro, setFiltro] = useState("todos");
+  const { t} = useTranslation();
+  
+   
 
   return (
     <div style={styles.dashboard}>
       <Header />
       <div style={styles.seccionPrincipal}>
         <div style={styles.columnaIzquierda}>
-          {/* Selector de filtro */}
+          
           <select
             value={filtro}
             onChange={(e) => setFiltro(e.target.value)}
@@ -30,12 +33,12 @@ const Home = () => {
               fontFamily: "inherit",
             }}
           >
-            <option value="todos">Historico</option>
-            <option value="mes">Ultimo Mes</option>
-            <option value="semana">Ultima Semana</option>
+            <option value="todos">{t("home.filters.todos")}</option>
+            <option value="mes">{t("home.filters.mes")}</option>
+            <option value="semana">{t("home.filters.semana")}</option>
           </select>
 
-          {/* Pasamos el valor del filtro al Listado */}
+          
           <ListadoDocs filtro={filtro} />
         </div>
 

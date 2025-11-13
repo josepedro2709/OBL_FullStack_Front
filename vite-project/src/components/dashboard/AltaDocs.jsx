@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
-import reviewValidationSchema from "../../validations/reviewValidations";
+import reviewValidationSchema from "../validations/reviewValidations";
 import {
   cargarTipos,
   cargarMultimedia,
 } from "../../store/slices/renderizadosSlice";
 import { crearResenia } from "../../store/slices/reviewsSlice";
+import { useTranslation } from "react-i18next";
 
 const URL_BASE = import.meta.env.VITE_URL_BASE;
 
@@ -33,8 +35,10 @@ const fotosDisponibles = [
     tipo: "Comentario",
   },
 ];
-//problema con campo etiquetaId y comentario: aunque en el payload del network puedo ver que esta ok me marca como si llegase mal
+
 const Altadoc = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
@@ -42,7 +46,7 @@ const Altadoc = () => {
     reset,
     setValue,
   } = useForm({
-    resolver: yupResolver(reviewValidationSchema),
+    resolver: yupResolver(reviewValidationSchema(t)),
     defaultValues: {
       comentario: "",
       tipo: "",
@@ -135,7 +139,7 @@ const Altadoc = () => {
         name="foto"
         control={control}
         render={({ field }) => (
-          <input {...field} type="hidden" /> //guarda en el form la url de la foto seleccionada
+          <input {...field} type="hidden" /> 
         )}
       />
       <Controller
@@ -145,7 +149,7 @@ const Altadoc = () => {
       />
 
       <div>
-        <p style={styles.label}>Elegí el tipo de tu reseña</p>
+        <p style={styles.label}>{t("agregarDoc.chooseType")}</p>
         <div style={styles.fotosContainer}>
           {fotosDisponibles.map((f) => (
             <img
@@ -171,13 +175,13 @@ const Altadoc = () => {
             <input {...field} style={styles.input} type="text" readOnly />
           )}
         />
-        <p style={styles.label}>Seleccioná el contenido a reseñar</p>
+        <p style={styles.label}>{t("agregarDoc.chooseContent")}</p>
         <Controller
           name="multimedia"
           control={control}
           render={({ field }) => (
             <select {...field} style={styles.input}>
-              <option value="">-- Elegí uno --</option>
+              <option value="">{t("agregarDoc.placeholderSeleccion")}</option>
               {Multimedias.map((m) => (
                 <option key={m._id} value={m._id}>
                   {m.titulo}
@@ -192,7 +196,7 @@ const Altadoc = () => {
       </div>
 
       <div>
-        <p style={styles.label}>Comentario</p>
+        <p style={styles.label}>{t("agregarDoc.commentLabel")}</p>
         <Controller
           name="comentario"
           control={control}
@@ -200,7 +204,7 @@ const Altadoc = () => {
             <textarea
               {...field}
               style={styles.textarea}
-              placeholder="Escribí tu reseña..."
+              placeholder={t("agregarDoc.commentPlaceholder")}
             />
           )}
         />
@@ -210,7 +214,7 @@ const Altadoc = () => {
       </div>
 
       <button style={styles.button} type="submit">
-        Agregar Reseña
+       {t("agregarDoc.submit")}
       </button>
       {mensaje && (
         <p style={{ color: "blue", fontWeight: "bold" }}>{mensaje}</p>

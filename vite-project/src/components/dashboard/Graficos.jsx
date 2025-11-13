@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Bar } from "react-chartjs-2";
+import { useTranslation } from "react-i18next";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -22,20 +23,18 @@ ChartJS.register(
 
 const GraficaResenas = () => {
   const reviews = useSelector((state) => state.reviews.listaResenias);
-
-  // 🔹 Si no hay reseñas, mostramos mensaje y no renderizamos la gráfica
+  const { t } = useTranslation();
   if (!reviews || !Array.isArray(reviews) || reviews.length === 0) {
     return (
       <div style={styles.contenedor}>
-        <h2 style={styles.titulo}>Reseñas registradas</h2>
+        <h2 style={styles.titulo}>{t("graficos.title")}</h2>
         <p style={{ textAlign: "center", color: "#666" }}>
-          No hay reseñas registradas aún.
+          {t("graficos.noData")}
         </p>
       </div>
     );
   }
 
-  // 🔹 Procesar reseñas si existen
   const resenias = Object.values(
     reviews.reduce((acc, r) => {
       const id = r.etiquetaId._id;

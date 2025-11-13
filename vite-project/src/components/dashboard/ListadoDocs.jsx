@@ -8,13 +8,15 @@ import {
 } from "../../store/slices/reviewsSlice";
 import { cargarMultimedia } from "../../store/slices/renderizadosSlice";
 import toast, { Toaster } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 const ListadoDocs = ({ filtro }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const resenias = useSelector((state) => state.reviews.listaResenias) || [];
   const Multimedias =
-    useSelector((state) => state.renderizados.listaMultimedias) || [];
+  useSelector((state) => state.renderizados.listaMultimedias) || [];
   const URL_BASE = import.meta.env.VITE_URL_BASE;
   const token = localStorage.getItem("token");
 
@@ -49,7 +51,6 @@ const ListadoDocs = ({ filtro }) => {
       .then((datos) => dispatch(cargarMultimedia(datos)));
   }, []);
 
-  // 🔍 Filtrado por fecha según la selección del usuario
   const filtrarPorFecha = (lista) => {
     if (filtro === "todos") return lista;
     const ahora = new Date();
@@ -68,18 +69,19 @@ const ListadoDocs = ({ filtro }) => {
 
   const eliminar = (id) => {
     toast(
-      (t) => (
+
+      (toastInstance) => (
         <div>
-          <p>¿Seguro que querés eliminar este review?</p>
+          <p>{t("listadoDocs.toasts.confirmDelete")}</p>
           <button
             onClick={() => {
               onEliminar(id);
-              toast.dismiss(t.id);
+              toast.dismiss(toastInstance.id);
             }}
           >
-            OK
+            {t("listadoDocs.buttons.ok")}
           </button>
-          <button onClick={() => toast.dismiss(t.id)}>Cancelar</button>
+          <button onClick={() => toast.dismiss(toastInstance.id)}>{t("listadoDocs.buttons.cancel")}</button>
         </div>
       ),
       { duration: Infinity }
@@ -97,12 +99,12 @@ const ListadoDocs = ({ filtro }) => {
       });
       if (res.ok) {
         dispatch(deleteResenia(id));
-        toast.success("Review eliminado correctamente");
+        toast.success(t("listadoDocs.toasts.deleteOk"));
       } else {
-        toast.error("Error al eliminar el review");
+        toast.error(t("listadoDocs.toast.deletedError"));
       }
     } catch {
-      toast.error("Ocurrió un error al eliminar");
+      toast.error(t("listadoDocs.toast.deletedException"));
     }
   };
 
@@ -162,13 +164,13 @@ const ListadoDocs = ({ filtro }) => {
             etiquetaId: etiquetaEditada,
           })
         );
-        toast.success("Review actualizado correctamente");
+        toast.success(t("listadoDocs.toasts.updatedOk"));
         cancelarEdicion();
       } else {
-        toast.error("Error al actualizar el review");
+        toast.error(t("listadoDocs.toasts.updatedError"));
       }
     } catch {
-      toast.error("Ocurrió un error al actualizar");
+      toast.error(t("listadoDocs.toasts.updatedException"));
     }
   };
 
@@ -181,13 +183,13 @@ const ListadoDocs = ({ filtro }) => {
 
             {editandoId === r._id ? (
               <>
-                <p style={styles.labelEdit}>Seleccioná el contenido:</p>
+                <p style={styles.labelEdit}>{t("listadoDocs.editSelect")}</p>
                 <select
                   value={multimediaEditada}
                   onChange={(e) => setMultimediaEditada(e.target.value)}
                   style={styles.selectEdicion}
                 >
-                  <option value="">-- Elegí uno --</option>
+                  <option value="">{t("listadoDocs.placeholderSeleccion")}</option>
                   {Multimedias.map((m) => (
                     <option key={m._id} value={m._id}>
                       {m.titulo}
@@ -195,7 +197,7 @@ const ListadoDocs = ({ filtro }) => {
                   ))}
                 </select>
 
-                <p style={styles.labelEdit}>Comentario:</p>
+                <p style={styles.labelEdit}>{t("listadoDocs.editComentario")}</p>
                 <textarea
                   value={comentarioEditado}
                   onChange={(e) => setComentarioEditado(e.target.value)}
@@ -212,8 +214,8 @@ const ListadoDocs = ({ filtro }) => {
 
             <div style={styles.infoYBotones}>
               <div style={styles.info}>
-                <p style={styles.tipo}>Tipo: {r.etiquetaId.nombre}</p>
-                <p style={styles.fecha}>Fecha: {r.createdAt}</p>
+                <p style={styles.tipo}>{t("listadoDocs.type")} {r.etiquetaId.nombre}</p>
+                <p style={styles.fecha}>{t("listadoDocs.date")} {new Date(r.updatedAt).toLocaleDateString()}</p>
               </div>
 
               <div style={styles.botones}>
@@ -223,13 +225,13 @@ const ListadoDocs = ({ filtro }) => {
                       style={styles.botonGuardar}
                       onClick={() => guardarEdicion(r)}
                     >
-                      Guardar
+                      {t("listadoDocs.buttons.save")}
                     </button>
                     <button
                       style={styles.botonCancelar}
                       onClick={cancelarEdicion}
                     >
-                      Cancelar
+                      {t("listadoDocs.buttons.cancel")}
                     </button>
                   </>
                 ) : (
@@ -238,13 +240,13 @@ const ListadoDocs = ({ filtro }) => {
                       style={styles.botonEditar}
                       onClick={() => activarEdicion(r)}
                     >
-                      Editar
+                      {t("listadoDocs.buttons.edit")}
                     </button>
                     <button
                       style={styles.botonEliminar}
                       onClick={() => eliminar(r._id)}
                     >
-                      Eliminar
+                      {t("listadoDocs.buttons.delete")}
                     </button>
                   </>
                 )}
@@ -254,7 +256,7 @@ const ListadoDocs = ({ filtro }) => {
         ))
       ) : (
         <p style={{ color: "#fff", fontWeight: "bold" }}>
-          No hay reseñas para este período
+          {t("listadoDocs.noReviews")}
         </p>
       )}
       <Toaster />

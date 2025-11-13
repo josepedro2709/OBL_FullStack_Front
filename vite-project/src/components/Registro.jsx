@@ -3,10 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import registroSchema from "./validations/registroSchema";
+import { useTranslation } from "react-i18next";
 const Registro = () => {
   const navigate = useNavigate();
-
-  const [error, setError] = useState(false);
+  const { t, i18n } = useTranslation();
+  const cambiarIdioma = (lang) => {
+    i18n.changeLanguage(lang);
+  };
+  const [error, setError] = useState(null);
 
   const name = useRef(null);
   const user = useRef(null);
@@ -15,21 +19,11 @@ const Registro = () => {
 
   const URL_BASE = import.meta.env.VITE_URL_BASE;
 
-  /*  useEffect(() => {
-    localStorage.clear();
-    setBtn(true);
-  }, []); */
 
   const registro = () => {
     let campoName = name.current.value;
     let campoUser = user.current.value;
     let campoPass = pass.current.value;
-    if (!campoUser || !campoPass || !campoName) {
-      setError(true);
-      return;
-    }
-
-    setError(false);
 
     fetch(`${URL_BASE}/v1/auth/signup`, {
       method: "POST",
@@ -47,14 +41,15 @@ const Registro = () => {
         if (data.token) {
           localStorage.setItem("token", data.token);
           localStorage.setItem("usuario", campoUser);
+          alert("Exito, formulario enviado correctamente");
+          reset();
           navigate("/");
         } else {
-          setError(true);
+          setError(data.message);
         }
       })
       .catch((error) => {
-        console.log(error);
-        setError(true);
+        setError("Error en el registro");
       });
   };
 
@@ -65,7 +60,7 @@ const Registro = () => {
     reset,
     formState: { errors, isValid },
   } = useForm({
-    resolver: yupResolver(registroSchema),
+    resolver: yupResolver(registroSchema(t)),
     mode: "onChange",
     defaultValues: {
       name: "",
@@ -76,20 +71,21 @@ const Registro = () => {
   });
 
   const onSubmit = (data) => {
-    console.log("formulario enviado: ", data);
     registro();
-    alert("Exito, formulario enviado correctamente");
-    reset();
   };
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <div className="card shadow p-4" style={{ width: "400px" }}>
+        <div style={{ position: "absolute", top: 10, right: 10 }}>
+            <button onClick={() => cambiarIdioma("es")}>ES</button>
+            <button onClick={() => cambiarIdioma("en")}>EN</button>
+        </div>
         <h3 className="text-center mb-4 text-success fw-bold">Crear Cuenta</h3>
 
         <div className="mb-3">
           <label htmlFor="txtName" className="form-label">
-            Nombre completo
+            {t("registro.name")}
           </label>
           <Controller
             control={control}
@@ -110,7 +106,7 @@ const Registro = () => {
 
         <div className="mb-3">
           <label htmlFor="txtEmail" className="form-label">
-            Correo electrónico
+            {t("registro.email")}
           </label>
           <Controller
             control={control}
@@ -131,7 +127,7 @@ const Registro = () => {
 
         <div className="mb-3">
           <label htmlFor="txtPass" className="form-label">
-            Contraseña
+           {t("registro.password")}
           </label>
           <Controller
             control={control}
@@ -153,7 +149,7 @@ const Registro = () => {
         </div>
         <div className="mb-3">
           <label htmlFor="txtConfirmPass" className="form-label">
-            Confirmar contraseña
+            {t("registro.confirmPassword")}
           </label>
           <Controller
             control={control}
@@ -176,7 +172,7 @@ const Registro = () => {
 
         {error && (
           <div className="alert alert-danger py-2">
-            Error al registrar usuario
+            {error}
           </div>
         )}
 
@@ -185,12 +181,12 @@ const Registro = () => {
           disabled={!isValid}
           onClick={handleSubmit(onSubmit)}
         >
-          Registrarse
+          {t("registro.submit")}
         </button>
 
         <div className="text-center">
           <Link to="/login" className="text-decoration-none">
-            ¿Ya tenés cuenta? Iniciá sesión
+            {t("registro.accesoSignIn")}
           </Link>
         </div>
       </div>

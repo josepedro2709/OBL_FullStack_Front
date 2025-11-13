@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { cargarUsuario } from "../../store/slices/usuarioSlice";
+import { useTranslation } from "react-i18next";
 
-//imposibilidad de aceder al user. no lo encuentra en el llamado por alguna razon
+
 const MetricasUso = () => {
   const reviews = useSelector((state) => state.reviews.listaResenias);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
   const totalReviews = reviews.length;
   const URL_BASE = import.meta.env.VITE_URL_BASE;
   const email = localStorage.getItem("usuario");
@@ -44,14 +48,14 @@ const MetricasUso = () => {
     <div style={styles.container}>
       {userPlan === "plus" ? (
         <>
-          <div style={styles.label}>Uso de documentos:</div>
+          <div style={styles.label}>{t("metricas.usageLabel")}</div>
           <div style={styles.progressBarContainer}>
             <div style={styles.progressBar(porcentaje)} />
           </div>
           <div style={styles.porcentajeText}>{porcentaje}%</div>
         </>
       ) : (
-        <div style={styles.label}>Total documentos: {totalReviews}</div>
+        <div style={styles.label}>{t("metricas.totalDocs")} {totalReviews}</div>
       )}
     </div>
   );

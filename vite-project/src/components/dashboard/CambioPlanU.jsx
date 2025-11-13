@@ -1,9 +1,11 @@
 import React, { use, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { cargarUsuario } from "../../store/slices/usuarioSlice";
+import { useTranslation } from "react-i18next";
 
 const CambioPlan = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const usuario = useSelector((state) => state.usuario.usuario);
   const token = localStorage.getItem("token");
   const [mensaje, setMensaje] = useState("");
@@ -11,6 +13,7 @@ const CambioPlan = () => {
   const URL_BASE = import.meta.env.VITE_URL_BASE;
 
   const cambiarPlan = () => {
+    
     if (usuario && usuario.plan === "plus") {
       const payload = { plan: "premium" };
       fetch(`${URL_BASE}/v1/user`, {
@@ -27,10 +30,10 @@ const CambioPlan = () => {
           setMensaje(r.message);
         })
         .catch((err) => {
-          setMensaje("Ha ocurrido un error");
+          setMensaje(t("cambioPlan.error"));
         });
     } else {
-      setMensaje("Tu plan ya es premium");
+      setMensaje(t("cambioPlan.yaPremium"));
     }
   };
 
@@ -40,18 +43,18 @@ const CambioPlan = () => {
         <p style={{ color: "blue", fontWeight: "bold" }}>{mensaje + "!"}</p>
       )}
       <div>
-        <span style={styles.label}>Tu plan es: </span>
+        <span style={styles.label}>{t("cambioPlan.currentPlan")} </span>
         <span style={styles.planText}>{usuario.plan}</span>
       </div>
       <div>
         {usuario.plan === "plus" ? (
           <>
             <span style={styles.label}>
-              Seleccione si desea promover su plan a Premium:
+              {t("cambioPlan.upgradePrompt")}
             </span>
             <br />
             <button style={styles.button} onClick={cambiarPlan}>
-              Aumentar Plan
+              {t("cambioPlan.upgradeButton")}
             </button>
           </>
         ) : (
@@ -61,12 +64,11 @@ const CambioPlan = () => {
               style={styles.buttonDisabled}
               onClick={cambiarPlan}
             >
-              Cambiar Plan
+              {t("cambioPlan.changeButton")}
             </button>
             <br />
             <span style={styles.label}>
-              ¡Ya tienes el plan Premium! Contactate si deseas bajar el nivel de
-              tu suscripción.
+              {t("cambioPlan.premiumText")}
             </span>
           </>
         )}
