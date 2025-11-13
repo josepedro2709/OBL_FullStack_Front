@@ -101,7 +101,7 @@ const Altadoc = () => {
     setValue("etiquetaId", tipoEncontrado._id);
     setValue("foto", foto.src);
   };
-
+  /* ALTA DOC */
   const onSubmit = (data) => {
     const payload = {
       imagen: data.foto,
@@ -138,9 +138,7 @@ const Altadoc = () => {
       <Controller
         name="foto"
         control={control}
-        render={({ field }) => (
-          <input {...field} type="hidden" /> 
-        )}
+        render={({ field }) => <input {...field} type="hidden" />}
       />
       <Controller
         name="etiquetaId"
@@ -214,7 +212,7 @@ const Altadoc = () => {
       </div>
 
       <button style={styles.button} type="submit">
-       {t("agregarDoc.submit")}
+        {t("agregarDoc.submit")}
       </button>
       {mensaje && (
         <p style={{ color: "blue", fontWeight: "bold" }}>{mensaje}</p>
