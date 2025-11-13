@@ -65,7 +65,9 @@
 
   "graficos": {
     "title": "Registered reviews",
-    "noData": "No review data available"
+    "subtitle":"Reviews by type",
+    "noData":"There is no reviews no graficate.",
+    "amount":"amount"
 
   },
 

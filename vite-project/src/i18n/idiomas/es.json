@@ -65,7 +65,10 @@
 
   "graficos": {
     "title": "Reseñas registradas",
-    "noData": "No review data available"
+    "subtitle":"Reseñas por tipo",
+    "noData":"No hay reseñas para graficar.",
+    "amount":"Cantidad"
+  
   },
 
   "login": {

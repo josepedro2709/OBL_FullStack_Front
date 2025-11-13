@@ -34,6 +34,7 @@ const GraficaResenas = () => {
       </div>
     );
   }
+ 
 
   const resenias = Object.values(
     reviews.reduce((acc, r) => {
@@ -65,7 +66,7 @@ const GraficaResenas = () => {
       },
       title: {
         display: true,
-        text: "Reseñas por Tipo",
+        text: t("graficos.subtitle"),
         color: "#122ae0",
         font: {
           size: 18,
@@ -106,7 +107,7 @@ const GraficaResenas = () => {
     labels: resenias.map((t) => t.name),
     datasets: [
       {
-        label: "Cantidad",
+        label: t("graficos.amount"),
         data: resenias.map((t) => t.value),
         backgroundColor: "#122ae0",
         borderColor: "#000",
@@ -119,7 +120,7 @@ const GraficaResenas = () => {
 
   return (
     <div style={styles.contenedor}>
-      <h2 style={styles.titulo}>Reseñas registradas</h2>
+      <h2 style={styles.titulo}>{t("graficos.title")}</h2>
       <div style={styles.graficoContenedor}>
         <Bar options={options} data={data} />
       </div>
