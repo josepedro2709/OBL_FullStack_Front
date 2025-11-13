@@ -34,7 +34,6 @@ const GraficaResenas = () => {
       </div>
     );
   }
- 
 
   const resenias = Object.values(
     reviews.reduce((acc, r) => {
